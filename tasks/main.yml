@@ -4,5 +4,6 @@
   community.general.snap:
     name: obsidian
     state: present
+    classic: true
   become: true
   become_user: root
