@@ -1,0 +1,8 @@
+---
+
+- name: Install obsidian snap
+  community.general.snap:
+    name: obsidian
+    state: present
+  become: true
+  become_user: root
