@@ -52,3 +52,4 @@ galaxy_info:
 dependencies:
   []
   # - role: community.general.snap
+  # - role: community.general.flatpak

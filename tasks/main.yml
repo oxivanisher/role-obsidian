@@ -1,17 +1,42 @@
 ---
 
-- name: Ensure snapd is installed
-  ansible.builtin.package:
-    name: snapd
+- name: Check if flatpak is available
+  ansible.builtin.stat:
+    path: /usr/bin/flatpak
+  register: flatpak_executable
+
+- name: Check if snap is available
+  ansible.builtin.stat:
+    path: /usr/bin/snap
+  register: snap_executable
+
+- name: Enable the flathub remote in the system installation
+  community.general.flatpak_remote:
+    name: flathub
     state: present
+    enabled: true
+    flatpakrepo_url: https://dl.flathub.org/repo/flathub.flatpakrepo
+  when: flatpak_executable.stat.exists
   become: true
   become_user: root
 
-- name: Install obsidian snap
+- name: Install obsidian as flatpak
+  community.general.flatpak:
+    name: md.obsidian.Obsidian
+    state: present
+    remote: flathub
+  when: flatpak_executable.stat.exists
+  become: true
+  become_user: root
+
+- name: Install obsidian as snap
   community.general.snap:
     name: obsidian
     state: present
     classic: true
+  when:
+    - not flatpak_executable.stat.exists
+    - snap_executable.stat.exists
   ignore_errors: "{{ ansible_check_mode }}"
   become: true
   become_user: root
