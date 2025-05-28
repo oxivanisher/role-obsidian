@@ -10,24 +10,25 @@
     path: /usr/bin/snap
   register: snap_executable
 
-- name: Enable the flathub remote in the system installation
-  community.general.flatpak_remote:
-    name: flathub
-    state: present
-    enabled: true
-    flatpakrepo_url: https://dl.flathub.org/repo/flathub.flatpakrepo
+- name: Install obsidian using flatpak
   when: flatpak_executable.stat.exists
-  become: true
-  become_user: root
+  block:
+    - name: Enable the flathub remote in the system installation
+      community.general.flatpak_remote:
+        name: flathub
+        state: present
+        enabled: true
+        flatpakrepo_url: https://dl.flathub.org/repo/flathub.flatpakrepo
+      become: true
+      become_user: root
 
-- name: Install obsidian as flatpak
-  community.general.flatpak:
-    name: md.obsidian.Obsidian
-    state: present
-    remote: flathub
-  when: flatpak_executable.stat.exists
-  become: true
-  become_user: root
+    - name: Install obsidian as flatpak
+      community.general.flatpak:
+        name: md.obsidian.Obsidian
+        state: present
+        remote: flathub
+      become: true
+      become_user: root
 
 - name: Install obsidian as snap
   community.general.snap:
