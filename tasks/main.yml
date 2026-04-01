@@ -1,5 +1,4 @@
 ---
-
 - name: Check if flatpak is available
   ansible.builtin.stat:
     path: /usr/bin/flatpak
@@ -20,7 +19,6 @@
         enabled: true
         flatpakrepo_url: https://dl.flathub.org/repo/flathub.flatpakrepo
       become: true
-      become_user: root
 
     - name: Install obsidian as flatpak
       community.general.flatpak:
@@ -28,7 +26,6 @@
         state: present
         remote: flathub
       become: true
-      become_user: root
 
 - name: Install obsidian as snap
   community.general.snap:
@@ -40,4 +37,3 @@
     - snap_executable.stat.exists
   ignore_errors: "{{ ansible_check_mode }}"
   become: true
-  become_user: root
