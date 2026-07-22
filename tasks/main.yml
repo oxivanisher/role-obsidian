@@ -2,15 +2,15 @@
 - name: Check if flatpak is available
   ansible.builtin.stat:
     path: /usr/bin/flatpak
-  register: flatpak_executable
+  register: obsidian_flatpak_executable
 
 - name: Check if snap is available
   ansible.builtin.stat:
     path: /usr/bin/snap
-  register: snap_executable
+  register: obsidian_snap_executable
 
 - name: Install obsidian using flatpak
-  when: flatpak_executable.stat.exists
+  when: obsidian_flatpak_executable.stat.exists
   block:
     - name: Enable the flathub remote in the system installation
       community.general.flatpak_remote:
@@ -33,7 +33,7 @@
     state: present
     classic: true
   when:
-    - not flatpak_executable.stat.exists
-    - snap_executable.stat.exists
+    - not obsidian_flatpak_executable.stat.exists
+    - obsidian_snap_executable.stat.exists
   ignore_errors: "{{ ansible_check_mode }}"
   become: true
